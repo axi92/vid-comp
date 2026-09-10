@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Build outputs
+ffmpeg-master-latest-linux64-gpl/
+*.tar.gz
+*.tar.xz
+
+# Logs
+*.log
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# README/Documentation
+README*
+*.md

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  vid-comp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vid-comp:latest
+    container_name: vid-comp
+    stdin_open: true
+    tty: true
+    environment:
+      - INPUT_DIR=/input
+      - OUTPUT_DIR=/output
+      - MIN_VMAF=${MIN_VMAF:-94}
+      - FILE_PATTERN=${FILE_PATTERN:-*.mp4|*.mkv}
+      - EXCLUDE_PATTERN=${EXCLUDE_PATTERN:-*.x265.mkv}
+    volumes:
+      # Input directory - mount your video folder here
+      - ${INPUT_MOUNT:-./input}:/input:ro
+      # Output directory - where converted files go
+      - ${OUTPUT_MOUNT:-./output}:/output
+    user: "${UID:-1000}:${GID:-1000}"
+    restart: unless-stopped
