@@ -90,4 +90,7 @@ docker run --rm --entrypoint "" vid-comp:latest ab-av1 --help
 
 # Start a shell
 docker run --rm --entrypoint "" -it vid-comp:latest bash
+
+# With root user
+docker run -ti --rm --entrypoint bash -u root vid-comp:latest
 ```

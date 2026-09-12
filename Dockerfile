@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libclang-dev \
     python3 \
     python3-pip \
+    zstd \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and extract FFmpeg
@@ -32,16 +33,10 @@ RUN mkdir -p /opt/ffmpeg && \
     rm ffmpeg-master-latest-linux64-gpl.tar.xz
 
 # Set up FFmpeg PATH
-ENV PATH="/opt/ffmpeg/bin:$PATH"
+ENV PATH="/opt/ffmpeg/bin:/usr/bin:$PATH"
 
 # Download ab-av1 binary
-RUN curl -sL https://api.github.com/repos/alexheretic/ab-av1/releases/latest > /tmp/release.json; \
-    jq -r '.assets[] | select(.name | contains("x86_64-unknown-linux-musl.tar.gz")) | .browser_download_url' /tmp/release.json > /tmp/ab_av1_url.txt; \
-    curl -sL -o /tmp/ab-av1.tar.gz "$(cat /tmp/ab_av1_url.txt)"; \
-    tar -xf /tmp/ab-av1.tar.gz -C /tmp; \
-    mv /tmp/ab-av1*/ab-av1 /usr/local/bin/ab-av1; \
-    chmod +x /usr/local/bin/ab-av1; \
-    rm -f /tmp/ab-av1.tar.gz /tmp/ab_av1_url.txt /tmp/release.json
+RUN curl -sL "$(curl -sL https://api.github.com/repos/alexheretic/ab-av1/releases/latest | jq -r '.assets[] | select(.name | contains("linux-musl")) | .browser_download_url')" | tar -I zstd -xv -C /usr/local/bin
 
 # Create input/output directories
 RUN mkdir -p ${INPUT_DIR} ${OUTPUT_DIR}
