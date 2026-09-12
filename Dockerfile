@@ -24,13 +24,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zstd \
     && rm -rf /var/lib/apt/lists/*
 
-# Download and extract FFmpeg
+# Download and extract FFmpeg directly into /opt/ffmpeg
 RUN mkdir -p /opt/ffmpeg && \
-    cd /opt && \
-    wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz && \
-    tar -xf ffmpeg-master-latest-linux64-gpl.tar.xz && \
-    mv ffmpeg-master-latest-linux64-gpl ffmpeg && \
-    rm ffmpeg-master-latest-linux64-gpl.tar.xz
+    wget -qO- https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz | \
+    tar -xJ -C /opt/ffmpeg --strip-components=1
 
 # Set up FFmpeg PATH
 ENV PATH="/opt/ffmpeg/bin:/usr/bin:$PATH"
