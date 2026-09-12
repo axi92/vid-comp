@@ -39,7 +39,7 @@ RUN curl -sL "$(curl -sL https://api.github.com/repos/alexheretic/ab-av1/release
 RUN mkdir -p ${INPUT_DIR} ${OUTPUT_DIR}
 
 RUN mkdir -p /app && \
-    chown -R ${UID}:${GID} /app && \
+    chown -R ${UID}:${GID} /app
 
 # Set working directory
 WORKDIR /app
