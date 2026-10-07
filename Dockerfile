@@ -8,7 +8,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     FILE_PATTERN="*.mp4|*.mkv" \
     EXCLUDE_PATTERN="*.x265.mkv" \
     UID=1000 \
-    GID=1000
+    GID=1000 \
+    AB_AV1_VERSION=0.11.7
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,7 +34,7 @@ RUN mkdir -p /opt/ffmpeg && \
 ENV PATH="/opt/ffmpeg/bin:/usr/bin:$PATH"
 
 # Download ab-av1 binary
-RUN curl -sL "$(curl -sL https://api.github.com/repos/alexheretic/ab-av1/releases/latest | jq -r '.assets[] | select(.name | contains("linux-musl")) | .browser_download_url')" | tar -I zstd -xv -C /usr/local/bin
+RUN curl -sL "https://github.com/alexheretic/ab-av1/releases/download/v${AB_AV1_VERSION}/ab-av1-v${AB_AV1_VERSION}-x86_64-unknown-linux-musl.tar.zst" | tar -I zstd -xv -C /usr/local/bin
 
 # Create input/output directories
 RUN mkdir -p ${INPUT_DIR} ${OUTPUT_DIR}
