@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Use environment variables with defaults
 INPUT_DIR="${INPUT_DIR:-/input}"
@@ -56,14 +55,17 @@ find "${INPUT_DIR}" -type f \( "${FIND_ARGS[@]}" \) -print0 | while IFS= read -r
     echo "Processing: ${file}"
     echo "  -> ${output_file}"
 
-    ab-av1 auto-encode \
+    if ab-av1 auto-encode \
         -i "${file}" \
         --encoder libx265 \
         --min-vmaf "${MIN_VMAF}" \
         --acodec aac \
-        -o "${output_file}"
-
-    echo "Done: ${file}"
+        -o "${output_file}"; then
+        echo "Done: ${file}"
+    else
+        echo "Skipping failed file: ${file}"
+        rm -f "${output_file}"
+    fi
 done
 
 echo ""
