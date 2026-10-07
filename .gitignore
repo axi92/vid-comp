@@ -4,3 +4,4 @@ output
 input
 convert.sh
 notes.md
+.env
